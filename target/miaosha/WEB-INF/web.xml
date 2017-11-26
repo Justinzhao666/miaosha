@@ -1,0 +1,31 @@
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1" metadata-complete="true">
+
+    <!--修该servlet版本为3.1-->
+
+    <!--配置DispatcherServlet 负责分发 ,这里配置和spring没有关系,是spring提供的servlet-->
+    <servlet>
+        <servlet-name>seckill-dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!--配置spring mvc需要加载的配置文件: dao.xml  service.xml web.xml
+            当前项目整合顺序: mybatis -> spring -> spring mvc
+        -->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/spring-*.xml</param-value>
+        </init-param>
+    </servlet>
+
+    <!--配置映射,什么样的url交给servlet来处理-->
+    <servlet-mapping>
+        <servlet-name>seckill-dispatcher</servlet-name>
+        <!--"/"默认匹配所有的请求: restful的设计 不允许出现 .do这中后缀-->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>/WEB-INF/jsp/list.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>
