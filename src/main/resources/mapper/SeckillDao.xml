@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zhaohaoren.miaosha.dao.SeckillDao">
+    <!--这个xml的目的：-->
+    <!--为Dao接口方法提供sql语句。-->
+
+    <update id="reduceNumber"> /*id为借口中的方法名*/
+        /*这里面具体的sql语句,里面的 #里面就是Dao接口里面定义方法的参数名字 */
+        UPDATE good_seckill
+        SET good_number = good_number-1
+        WHERE good_id= #{seckillId}
+        AND start_time  <![CDATA[ <= ]]> #{killTime}
+        AND end_time >= #{killTime}
+        AND good_number > 0;
+    </update>
+
+    <select id="queryById" resultType="SecKill" parameterType="long">
+        SELECT good_id,good_name,good_number,start_time,end_time,create_time
+        FROM good_seckill
+        WHERE good_id = #{seckillId}
+    </select>
+
+    <select id="queryAll" resultType="Seckill">
+        SELECT good_id,good_name,good_number,start_time,end_time,create_time
+        FROM good_seckill
+        ORDER BY create_time DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <!--使用mybatis调用存储过程-->
+    <select id="killByProcedure" statementType="CALLABLE">
+        call execute_seckill(
+            #{seckillId, jdbcType=BIGINT, mode=IN},
+            #{phone, jdbcType=BIGINT, mode=IN},
+            #{killTime, jdbcType=TIMESTAMP, mode=IN},
+            #{result, jdbcType=INTEGER, mode=OUT}        )
+    </select>
+
+</mapper>
